@@ -1,0 +1,502 @@
+/**
+ * MATI STORE - MOTOR DE LA TIENDA
+ *
+ * Las fotos se sirven a través del Netlify Image CDN, así que el archivo
+ * original de alta resolución vive en /images y el visitante sólo descarga
+ * una versión liviana en WebP del tamaño que realmente necesita.
+ */
+
+// Catálogo completo
+const PRODUCTS = [
+    {
+        id: "cinturon-fino-negro",
+        name: "Cinturon fino - Negro",
+        category: "negro",
+        price: 10000,
+        images: [
+            "/images/fino-negro-1.png",
+            "/images/fino-negro-2.png",
+            "/images/fino-negro-3.png"
+        ],
+        description: "Cinturón fino en ecocuero negro con hebilla metálica dorada clásica."
+    },
+    {
+        id: "cinturon-boho-marron",
+        name: "Cinturon boho - Marron antiguo",
+        category: "marron",
+        price: 15000,
+        images: [
+            "/images/boho-marron-1.png",
+            "/images/boho-marron-2.png"
+        ],
+        description: "Cinturón ancho estilo boho en tono marrón antiguo con tachas doradas y hebilla circular."
+    },
+    {
+        id: "cinturon-boho-black",
+        name: "Cinturon Boho - Black",
+        category: "negro",
+        price: 15000,
+        images: [
+            "/images/boho-black-1.png",
+            "/images/boho-black-2.png"
+        ],
+        description: "Cinturón ancho estilo boho en color negro con tachas metálicas circulares."
+    },
+    {
+        id: "cinturon-bull-vintage-brown",
+        name: "Cinturon Bull - Vintage Brown",
+        category: "marron",
+        price: 15000,
+        images: [
+            "/images/bull-vintage-brown-1.avif",
+            "/images/bull-vintage-brown-2.avif",
+            "/images/bull-vintage-brown-3.avif"
+        ],
+        description: "Cinturón estilo texano con repujado floral y hebilla labrada Black Bull en tono marrón vintage."
+    },
+    {
+        id: "cinturon-flower-vintage-brown",
+        name: "Cinturon Flower - Vintage Brown",
+        category: "marron",
+        price: 15000,
+        images: [
+            "/images/flower-vintage-brown-1.avif",
+            "/images/flower-vintage-brown-2.avif",
+            "/images/flower-vintage-brown-3.avif"
+        ],
+        description: "Cinturón con grabado retro, pasador y puntera metálica trabajada en relieve."
+    },
+    {
+        id: "cinturon-rustic-black",
+        name: "Cinturon Rustic - Black",
+        category: "negro",
+        price: 12500,
+        images: [
+            "/images/rustic-black-1.png",
+            "/images/rustic-black-2.png",
+            "/images/rustic-black-3.png"
+        ],
+        description: "Cinturón rústico negro con tachas cuadradas y ojalillos metálicos."
+    },
+    {
+        id: "cinturon-rustic-brown",
+        name: "Cinturon Rustic - Brown",
+        category: "marron",
+        price: 12500,
+        images: [
+            "/images/rustic-brown-1.png",
+            "/images/rustic-brown-2.png"
+        ],
+        description: "Cinturón rústico marrón con apliques y remaches metálicos envejecidos."
+    },
+    {
+        id: "cinturon-tachas-black",
+        name: "Cinturon Tachas - Black",
+        category: "negro",
+        price: 13500,
+        images: [
+            "/images/tachas-black-1.png",
+            "/images/tachas-black-2.png"
+        ],
+        description: "Cinturón negro con tachas metálicas continuas y hebilla clásica."
+    },
+    {
+        id: "cinturon-tachas-brown",
+        name: "Cinturon Tachas - Brown",
+        category: "marron",
+        price: 13500,
+        images: [
+            "/images/tachas-brown-1.png"
+        ],
+        description: "Cinturón marrón con tachas metálicas circulares y pasador reforzado."
+    }
+];
+
+// Placeholder para los modelos que todavía no tienen foto cargada
+const PLACEHOLDER_IMG = "data:image/svg+xml," + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">' +
+    '<rect width="400" height="300" fill="#E5DFC0"/>' +
+    '<text x="200" y="142" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="700" fill="#3A230A" fill-opacity="0.5">Mati Store</text>' +
+    '<text x="200" y="174" text-anchor="middle" font-family="sans-serif" font-size="15" fill="#3A230A" fill-opacity="0.45">Foto a pedido por WhatsApp</text>' +
+    '</svg>'
+);
+
+// Estado
+const state = {
+    products: PRODUCTS,
+    filteredProducts: PRODUCTS,
+    activeCategory: "all",
+    searchQuery: "",
+    activeModalProduct: null,
+    activeModalImgIndex: 0
+};
+
+// Carga inicial
+document.addEventListener("DOMContentLoaded", () => {
+    applyStoreMetadata();
+    renderCategories();
+    setupEventListeners();
+    applyFilters();
+    openProductFromUrl();
+});
+
+/**
+ * Devuelve la URL optimizada (WebP, al tamaño pedido) vía Netlify Image CDN.
+ * Los data-URI del placeholder se devuelven sin tocar.
+ */
+function optimizedImage(path, width, height) {
+    if (!path || path.startsWith("data:")) return PLACEHOLDER_IMG;
+
+    const params = new URLSearchParams({ url: path, w: String(width), fm: "webp", q: "78" });
+    if (height) {
+        params.set("h", String(height));
+        params.set("fit", "cover");
+    }
+    return `/.netlify/images?${params.toString()}`;
+}
+
+function applyStoreMetadata() {
+    document.querySelectorAll(".store-name-text").forEach(el => el.textContent = STORE_CONFIG.storeName);
+
+    const bannerTitle = document.getElementById("banner-title");
+    if (bannerTitle) bannerTitle.textContent = STORE_CONFIG.bannerTitle;
+
+    document.querySelectorAll(".store-tagline-text").forEach(el => el.textContent = STORE_CONFIG.tagline);
+
+    const waHeader = document.getElementById("header-wa-link");
+    if (waHeader) {
+        waHeader.href = `https://wa.me/${STORE_CONFIG.whatsappPhone}?text=${encodeURIComponent(STORE_CONFIG.whatsappInquiryMessage)}`;
+    }
+}
+
+function renderCategories() {
+    const container = document.getElementById("category-filters");
+    if (!container) return;
+
+    container.innerHTML = STORE_CONFIG.categories.map(cat => `
+        <button type="button" class="category-pill ${cat.id === state.activeCategory ? 'active' : ''}" data-category="${cat.id}">
+            ${cat.label}
+        </button>
+    `).join("");
+}
+
+function formatPrice(amount) {
+    return amount.toLocaleString("es-AR");
+}
+
+function productUrl(product) {
+    return `${location.origin}${location.pathname}?p=${encodeURIComponent(product.id)}`;
+}
+
+function buildWhatsAppLink(product) {
+    const message =
+        `${STORE_CONFIG.whatsappMessagePrefix}"${product.name}" (${STORE_CONFIG.currencySymbol}${formatPrice(product.price)})` +
+        `\n${productUrl(product)}`;
+    return `https://wa.me/${STORE_CONFIG.whatsappPhone}?text=${encodeURIComponent(message)}`;
+}
+
+function applyFilters() {
+    let result = [...state.products];
+
+    // Filtro por categoría (Todos, Negro, Marrón)
+    if (state.activeCategory === "negro") {
+        result = result.filter(p => p.category === "negro" || p.name.toLowerCase().includes("negro") || p.name.toLowerCase().includes("black"));
+    } else if (state.activeCategory === "marron") {
+        result = result.filter(p => p.category === "marron" || p.name.toLowerCase().includes("marron") || p.name.toLowerCase().includes("brown"));
+    }
+
+    // Buscador en tiempo real
+    if (state.searchQuery.trim() !== "") {
+        const query = state.searchQuery.toLowerCase().trim();
+        result = result.filter(p =>
+            p.name.toLowerCase().includes(query) ||
+            p.category.toLowerCase().includes(query) ||
+            (p.description && p.description.toLowerCase().includes(query))
+        );
+    }
+
+    state.filteredProducts = result;
+    renderProductsGrid();
+}
+
+function renderProductsGrid() {
+    const grid = document.getElementById("products-grid");
+    const emptyState = document.getElementById("empty-state");
+    if (!grid) return;
+
+    if (state.filteredProducts.length === 0) {
+        grid.innerHTML = "";
+        if (emptyState) emptyState.classList.remove("hidden");
+        return;
+    }
+
+    if (emptyState) emptyState.classList.add("hidden");
+
+    grid.innerHTML = state.filteredProducts.map(product => {
+        const waLink = buildWhatsAppLink(product);
+        const photoCount = product.images.length;
+        const mainImg = photoCount > 0 ? optimizedImage(product.images[0], 640, 480) : PLACEHOLDER_IMG;
+
+        return `
+            <article class="product-card" data-id="${product.id}">
+                <div class="product-image-wrapper" data-open="${product.id}">
+                    <img src="${mainImg}" alt="${product.name}" class="product-img" loading="lazy" onerror="this.onerror=null;this.src='${PLACEHOLDER_IMG}'">
+                    ${photoCount > 1 ? `<span class="photos-count-badge">${photoCount} fotos</span>` : ''}
+                    ${photoCount === 0 ? `<span class="photos-count-badge">Consultar fotos</span>` : ''}
+                </div>
+
+                <div class="product-info">
+                    <h3 class="product-title" data-open="${product.id}">${product.name}</h3>
+
+                    <div class="product-pricing">
+                        <span class="current-price">${STORE_CONFIG.currencySymbol}${formatPrice(product.price)}</span>
+                    </div>
+
+                    <div class="card-actions">
+                        <a href="${waLink}" target="_blank" rel="noopener" class="btn-buy" title="Comprar por WhatsApp">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.586-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.174.086.275.073.376-.044.101-.116.433-.506.549-.68.116-.173.231-.144.39-.086s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.099.824zm-3.423-10.416c-4.418 0-8 3.582-8 8 0 1.411.365 2.738 1.006 3.894l-1.071 3.915 4.025-1.056c1.114.607 2.383.947 3.731.947 4.418 0 8-3.582 8-8s-3.582-8-8-8z"/>
+                            </svg>
+                            <span>Comprar</span>
+                        </a>
+                        <button type="button" class="btn-share-card" data-share="${product.id}" title="Compartir este cinturón" aria-label="Compartir ${product.name}">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </article>
+        `;
+    }).join("");
+}
+
+function setupEventListeners() {
+    // Categorías
+    document.getElementById("category-filters")?.addEventListener("click", (e) => {
+        const btn = e.target.closest(".category-pill");
+        if (!btn) return;
+
+        document.querySelectorAll(".category-pill").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.activeCategory = btn.dataset.category;
+        applyFilters();
+    });
+
+    // Buscador
+    const searchInput = document.getElementById("search-input");
+    searchInput?.addEventListener("input", (e) => {
+        state.searchQuery = e.target.value;
+        applyFilters();
+    });
+
+    // Abrir detalle / compartir desde las tarjetas
+    document.getElementById("products-grid")?.addEventListener("click", (e) => {
+        const shareBtn = e.target.closest("[data-share]");
+        if (shareBtn) {
+            shareProduct(shareBtn.dataset.share);
+            return;
+        }
+
+        const opener = e.target.closest("[data-open]");
+        if (opener) openProductModal(opener.dataset.open);
+    });
+
+    // Compartir la tienda entera
+    document.querySelectorAll("[data-share-store]").forEach(btn => {
+        btn.addEventListener("click", shareStore);
+    });
+
+    // Modal: cerrar
+    document.getElementById("modal-close-btn")?.addEventListener("click", () => closeModal());
+    document.getElementById("product-modal")?.addEventListener("click", (e) => {
+        if (e.target.id === "product-modal") closeModal();
+    });
+
+    // Modal: galería y compartir
+    document.getElementById("modal-thumbs")?.addEventListener("click", (e) => {
+        const thumb = e.target.closest("[data-index]");
+        if (thumb) selectModalImage(Number(thumb.dataset.index));
+    });
+    document.getElementById("modal-share-btn")?.addEventListener("click", () => {
+        if (state.activeModalProduct) shareProduct(state.activeModalProduct.id);
+    });
+
+    // Teclado
+    document.addEventListener("keydown", (e) => {
+        if (!state.activeModalProduct) return;
+
+        if (e.key === "Escape") closeModal();
+        if (e.key === "ArrowRight") stepModalImage(1);
+        if (e.key === "ArrowLeft") stepModalImage(-1);
+    });
+
+    // Botón "atrás" del navegador cierra el detalle en lugar de salir del sitio
+    window.addEventListener("popstate", (e) => {
+        const productId = e.state && e.state.productId;
+        if (productId) {
+            openProductModal(productId, true);
+        } else {
+            closeModal(true);
+        }
+    });
+}
+
+/**
+ * Si alguien entra con un link directo a un producto (?p=id), lo abre.
+ */
+function openProductFromUrl() {
+    const productId = new URLSearchParams(location.search).get("p");
+    if (!productId) return;
+    if (!state.products.some(p => p.id === productId)) return;
+
+    // Deja una entrada "limpia" detrás para que "atrás" cierre el detalle.
+    history.replaceState({}, "", location.pathname);
+    openProductModal(productId);
+}
+
+/**
+ * Abre el modal y muestra la galería de fotos del producto
+ */
+function openProductModal(productId, fromHistory) {
+    const product = state.products.find(p => p.id === productId);
+    if (!product) return;
+
+    state.activeModalProduct = product;
+    state.activeModalImgIndex = 0;
+
+    if (!fromHistory) {
+        history.pushState({ productId }, "", `?p=${encodeURIComponent(productId)}`);
+    }
+
+    updateModalView();
+
+    document.getElementById("product-modal").classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+}
+
+function updateModalView() {
+    const product = state.activeModalProduct;
+    if (!product) return;
+
+    const hasPhotos = product.images.length > 0;
+    const currentImg = hasPhotos ? product.images[state.activeModalImgIndex] : null;
+
+    const modalMainImg = document.getElementById("modal-main-img");
+    modalMainImg.src = hasPhotos ? optimizedImage(currentImg, 900, 675) : PLACEHOLDER_IMG;
+    modalMainImg.alt = product.name;
+    modalMainImg.onerror = () => { modalMainImg.onerror = null; modalMainImg.src = PLACEHOLDER_IMG; };
+
+    document.getElementById("modal-title").textContent = product.name;
+    document.getElementById("modal-price").textContent = `${STORE_CONFIG.currencySymbol}${formatPrice(product.price)}`;
+    document.getElementById("modal-desc").textContent = hasPhotos
+        ? (product.description || "")
+        : `${product.description || ""} Las fotos de este modelo se envían por WhatsApp.`.trim();
+
+    const buyBtn = document.getElementById("modal-buy-link");
+    buyBtn.href = buildWhatsAppLink(product);
+
+    // Miniaturas
+    const thumbsContainer = document.getElementById("modal-thumbs");
+    if (thumbsContainer) {
+        if (product.images.length > 1) {
+            thumbsContainer.innerHTML = product.images.map((img, idx) => `
+                <button type="button" class="modal-thumb-btn ${idx === state.activeModalImgIndex ? 'active' : ''}" data-index="${idx}" aria-label="Foto ${idx + 1}">
+                    <img src="${optimizedImage(img, 140, 140)}" alt="Miniatura ${idx + 1}" loading="lazy">
+                </button>
+            `).join("");
+            thumbsContainer.style.display = "flex";
+        } else {
+            thumbsContainer.innerHTML = "";
+            thumbsContainer.style.display = "none";
+        }
+    }
+}
+
+function selectModalImage(index) {
+    state.activeModalImgIndex = index;
+    updateModalView();
+}
+
+function stepModalImage(delta) {
+    const total = state.activeModalProduct?.images.length || 0;
+    if (total < 2) return;
+
+    state.activeModalImgIndex = (state.activeModalImgIndex + delta + total) % total;
+    updateModalView();
+}
+
+function closeModal(fromHistory) {
+    // Si el detalle agregó una entrada al historial, volvemos atrás y el
+    // listener de popstate se encarga de esconderlo.
+    if (!fromHistory && history.state && history.state.productId) {
+        history.back();
+        return;
+    }
+
+    const modal = document.getElementById("product-modal");
+    if (modal) modal.classList.add("hidden");
+    document.body.style.overflow = "";
+    state.activeModalProduct = null;
+}
+
+/* ==========================================================================
+   COMPARTIR
+   ========================================================================== */
+
+function shareStore() {
+    shareLink({
+        title: STORE_CONFIG.storeName,
+        text: STORE_CONFIG.shareStoreText,
+        url: `${location.origin}${location.pathname}`
+    });
+}
+
+function shareProduct(productId) {
+    const product = state.products.find(p => p.id === productId);
+    if (!product) return;
+
+    shareLink({
+        title: `${product.name} - ${STORE_CONFIG.storeName}`,
+        text: `${product.name} - ${STORE_CONFIG.currencySymbol}${formatPrice(product.price)}`,
+        url: productUrl(product)
+    });
+}
+
+/**
+ * Usa el menú nativo de compartir del celular y, si no existe, copia el link.
+ */
+async function shareLink({ title, text, url }) {
+    if (navigator.share) {
+        try {
+            await navigator.share({ title, text, url });
+            return;
+        } catch (err) {
+            if (err && err.name === "AbortError") return;
+        }
+    }
+
+    try {
+        await navigator.clipboard.writeText(url);
+        showToast("¡Link copiado! Ya podés pegarlo y compartirlo.");
+    } catch (err) {
+        showToast(url);
+    }
+}
+
+let toastTimer = null;
+
+function showToast(message) {
+    const toast = document.getElementById("toast");
+    if (!toast) return;
+
+    toast.textContent = message;
+    toast.classList.add("visible");
+
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("visible"), 3200);
+}

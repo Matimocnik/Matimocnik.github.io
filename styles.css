@@ -1,0 +1,477 @@
+/* ==========================================================================
+   MATI STORE - PALETA MUTED MONARCH (#8DA28C, #A4530C, #EEE9C1, #3A230A)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap');
+
+:root {
+    /* Paleta Muted Monarch */
+    --color-sage: #8DA28C;        /* Verde salvia suave */
+    --color-amber: #A4530C;       /* Marrón cálido terracota / ámbar */
+    --color-cream: #EEE9C1;       /* Arena suave / lino crema (Fondo principal) */
+    --color-dark: #3A230A;        /* Marrón café profundo / espresso */
+    
+    --color-card-bg: #FAF8ED;     /* Crema claro para tarjetas */
+    --color-border: #D8D2B0;      /* Borde sutil a tono */
+    --color-wpp: #25D366;         /* Verde WhatsApp oficial */
+    --color-wpp-hover: #1EBE5D;
+
+    --font-heading: 'Syne', -apple-system, sans-serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 20px;
+    --transition: all 0.25s ease;
+}
+
+/* Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--color-cream);
+    color: var(--color-dark);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+    outline: none;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+.header {
+    background-color: var(--color-cream);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+    gap: 1.5rem;
+}
+
+.brand-logo {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--color-dark);
+    letter-spacing: -0.02em;
+}
+
+.header-search {
+    flex: 1;
+    max-width: 380px;
+    position: relative;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.6rem 1rem 0.6rem 2.2rem;
+    background-color: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 50px;
+    font-size: 0.88rem;
+    color: var(--color-dark);
+    outline: none;
+    transition: var(--transition);
+}
+
+.search-input:focus {
+    border-color: var(--color-amber);
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-dark);
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.btn-header-wpp {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: var(--color-dark);
+    color: var(--color-cream);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.btn-header-wpp:hover {
+    background: var(--color-amber);
+}
+
+/* ==========================================================================
+   BANNER "TIENDA ONLINE"
+   ========================================================================== */
+.hero-banner {
+    padding: 2rem 0 1rem 0;
+    text-align: center;
+}
+
+.banner-title {
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--color-dark);
+    letter-spacing: -0.02em;
+}
+
+/* ==========================================================================
+   CATEGORÍAS (Todos, Negro, Marrón)
+   ========================================================================== */
+.categories-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 1rem 0 2rem 0;
+}
+
+.category-pill {
+    padding: 0.55rem 1.4rem;
+    border-radius: 50px;
+    background: var(--color-card-bg);
+    color: var(--color-dark);
+    border: 1px solid var(--color-border);
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.category-pill:hover {
+    border-color: var(--color-dark);
+}
+
+.category-pill.active {
+    background: var(--color-dark);
+    color: var(--color-cream);
+    border-color: var(--color-dark);
+}
+
+/* ==========================================================================
+   PRODUCTOS
+   ========================================================================== */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.product-card {
+    background: var(--color-card-bg);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition);
+}
+
+.product-card:hover {
+    border-color: var(--color-amber);
+    transform: translateY(-4px);
+}
+
+.product-image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: #E5DFC0;
+    cursor: pointer;
+}
+
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.4s ease;
+}
+
+.product-card:hover .product-img {
+    transform: scale(1.04);
+}
+
+.photos-count-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(58, 35, 10, 0.85);
+    color: var(--color-cream);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 50px;
+}
+
+.product-info {
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.product-title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-dark);
+    margin-bottom: 0.6rem;
+    cursor: pointer;
+}
+
+.product-pricing {
+    margin-bottom: 1.2rem;
+}
+
+.current-price {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--color-amber);
+}
+
+.card-actions {
+    margin-top: auto;
+}
+
+.btn-buy {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--color-dark);
+    color: var(--color-cream);
+    padding: 0.85rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: 700;
+    transition: var(--transition);
+}
+
+.btn-buy:hover {
+    background: var(--color-amber);
+}
+
+/* ==========================================================================
+   MODAL CON GALERÍA DE FOTOS
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(58, 35, 10, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 1.5rem;
+}
+
+.modal-content {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    max-width: 780px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    padding: 2rem;
+}
+
+.modal-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--color-cream);
+    color: var(--color-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.modal-gallery-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.modal-main-img-wrap {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: #E5DFC0;
+}
+
+.modal-main-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-thumbs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.modal-thumb-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 2px solid transparent;
+    opacity: 0.7;
+    transition: var(--transition);
+}
+
+.modal-thumb-btn.active, .modal-thumb-btn:hover {
+    border-color: var(--color-amber);
+    opacity: 1;
+}
+
+.modal-thumb-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-info-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-title {
+    font-family: var(--font-heading);
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--color-dark);
+    margin-bottom: 0.5rem;
+}
+
+.modal-price {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--color-amber);
+    margin-bottom: 1.2rem;
+}
+
+.modal-desc {
+    color: var(--color-dark);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.modal-btn-buy {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    background: var(--color-dark);
+    color: var(--color-cream);
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 700;
+    transition: var(--transition);
+}
+
+.modal-btn-buy:hover {
+    background: var(--color-amber);
+}
+
+/* Floating WhatsApp */
+.floating-whatsapp {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 54px;
+    height: 54px;
+    background: var(--color-wpp);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    z-index: 95;
+    transition: var(--transition);
+}
+
+.floating-whatsapp:hover {
+    transform: scale(1.08);
+    background: var(--color-wpp-hover);
+}
+
+.footer {
+    text-align: center;
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--color-border);
+    font-size: 0.85rem;
+    color: var(--color-dark);
+    opacity: 0.8;
+}
+
+.hidden { display: none !important; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .modal-grid { grid-template-columns: 1fr; }
+    .banner-title { font-size: 2.1rem; }
+    .products-grid { grid-template-columns: 1fr; }
+}

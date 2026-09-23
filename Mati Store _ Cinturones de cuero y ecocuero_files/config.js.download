@@ -1,0 +1,32 @@
+/**
+ * CONFIGURACIÓN DE MATI STORE
+ *
+ * Todo lo editable de la tienda vive acá: nombre, teléfono, textos y categorías.
+ */
+const STORE_CONFIG = {
+    // Nombre de la tienda
+    storeName: "Mati Store",
+    bannerTitle: "Tienda Online",
+    tagline: "Cinturones de cuero y ecocuero. Elegí tu modelo y te lo reservamos por WhatsApp.",
+
+    // Moneda: Pesos Argentinos ($)
+    currencySymbol: "$",
+
+    // Número de WhatsApp para pedidos directos (11 6798-3365)
+    whatsappPhone: "5491167983365",
+    whatsappDisplayPhone: "11 6798-3365",
+
+    // Mensaje automático al comprar
+    whatsappMessagePrefix: "Hola, me interesa comprar: ",
+    whatsappInquiryMessage: "Hola, quisiera hacer una consulta sobre los productos de Mati Store",
+
+    // Texto que acompaña al link cuando alguien comparte la tienda
+    shareStoreText: "Mirá los cinturones de Mati Store",
+
+    // Categorías solicitadas (solo Todos, Negro y Marrón)
+    categories: [
+        { id: "all", label: "Todos" },
+        { id: "negro", label: "Negro" },
+        { id: "marron", label: "Marrón" }
+    ]
+};
