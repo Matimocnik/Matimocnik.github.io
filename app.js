@@ -21,6 +21,7 @@ const PRODUCTS = [
         name: "Cinturon boho - Marron antiguo",
         category: "marron",
         price: 15000,
+        soldOut: true,
         images: [
             "images/cinturon_boho_marron_1.png",
             "images/cinturon_boho_marron_2.png"
