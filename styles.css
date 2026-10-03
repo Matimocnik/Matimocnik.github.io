@@ -294,6 +294,62 @@ button {
     background: var(--color-amber);
 }
 
+.sold-out-badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--color-amber);
+    color: #FFFFFF;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.65rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    text-transform: uppercase;
+    z-index: 2;
+}
+
+.product-card.is-sold-out .product-img {
+    filter: grayscale(35%) opacity(0.85);
+}
+
+.product-card.is-sold-out:hover {
+    transform: none;
+    border-color: var(--color-border);
+}
+
+.status-tag-soldout {
+    display: inline-block;
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-amber);
+    background: rgba(164, 83, 12, 0.12);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    vertical-align: middle;
+}
+
+.btn-sold-out {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #E5DFC0;
+    color: #8C7B6B;
+    padding: 0.85rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: not-allowed;
+    border: 1px dashed #C2BA9C;
+    user-select: none;
+}
+
 /* ==========================================================================
    MODAL CON GALERÍA DE FOTOS
    ========================================================================== */
@@ -433,6 +489,18 @@ button {
 
 .modal-btn-buy:hover {
     background: var(--color-amber);
+}
+
+.modal-btn-buy.is-sold-out {
+    background: #E5DFC0;
+    color: #8C7B6B;
+    border: 1px dashed #C2BA9C;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.modal-btn-buy.is-sold-out:hover {
+    background: #E5DFC0;
 }
 
 /* Floating WhatsApp */
