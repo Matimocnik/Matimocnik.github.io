@@ -82,6 +82,7 @@ const PRODUCTS = [
         name: "Cinturon Rustic - Brown",
         category: "marron",
         price: 12500,
+        soldOut: true,
         images: [
             "images/Cinturon Rustic - Brown 1.png",
             "images/Cinturon Rustic - Brown 2.png"
@@ -104,6 +105,7 @@ const PRODUCTS = [
         name: "Cinturon Tachas - Brown",
         category: "marron",
         price: 13500,
+        soldOut: true,
         images: [
             "images/Cinturon Tachas - Brown 1.png",
             "images/Cinturon Tachas - Brown 2.png"
