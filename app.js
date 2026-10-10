@@ -9,6 +9,7 @@ const PRODUCTS = [
         name: "Cinturon fino - Negro",
         category: "negro",
         price: 10000,
+        soldOut: true,
         images: [
             "images/cinturon_fino_negro_1.png",
             "images/cinturon_fino_negro_2.png",
@@ -70,6 +71,7 @@ const PRODUCTS = [
         name: "Cinturon Rustic - Black",
         category: "negro",
         price: 12500,
+        soldOut: true,
         images: [
             "images/Cinturon Rustic - Black.png",
             "images/Cinturon Rustic - Black 2.png",
